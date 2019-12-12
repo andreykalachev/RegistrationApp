@@ -1,0 +1,22 @@
+﻿using RegistrationApp.Domain.Core.Entities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace RegistrationApp.Domain.Interfaces.Services
+{
+    public interface ITodoListService
+    {
+        Task<int> AddItemAsync(TodoItem item);
+
+        Task MarkAsDoneAsync(TodoItem item);
+
+        Task<TodoItem> GetByIdAsync(Guid id);
+
+        Task<IEnumerable<TodoItem>> GetAllAsync(bool includeDoneItems = false);
+
+        Task DeleteAsync(Guid id);
+
+        Task UpdateAsync(TodoItem item);
+    }
+}
