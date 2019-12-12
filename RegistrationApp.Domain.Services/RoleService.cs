@@ -1,8 +1,8 @@
-﻿using RegistrationApp.Domain.Core.Identity;
+﻿using RegistrationApp.Domain.Core.Exceptions;
+using RegistrationApp.Domain.Core.Identity;
 using RegistrationApp.Domain.Interfaces;
 using RegistrationApp.Domain.Interfaces.Services.Identity;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RegistrationApp.Domain.Services
@@ -33,7 +33,7 @@ namespace RegistrationApp.Domain.Services
 
             if (roleToDelete == null)
             {
-                throw new KeyNotFoundException("Unable to delete, role not found");
+                throw new EntityNotFoundException("Unable to delete, role not found");
             }
 
             _unitOfWork.RoleRepository.Delete(roleToDelete);

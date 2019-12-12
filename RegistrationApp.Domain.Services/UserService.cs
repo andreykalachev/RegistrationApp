@@ -1,12 +1,12 @@
-﻿using RegistrationApp.Domain.Core.Identity;
+﻿using RegistrationApp.Domain.Core.Exceptions;
+using RegistrationApp.Domain.Core.Identity;
 using RegistrationApp.Domain.Interfaces;
 using RegistrationApp.Domain.Interfaces.Services.Identity;
 using RegistrationApp.Domain.Services.Utilities;
 using System;
-using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using RegistrationApp.Domain.Core.Exceptions;
 
 namespace RegistrationApp.Domain.Services
 {
@@ -28,7 +28,7 @@ namespace RegistrationApp.Domain.Services
 
             if (await IsLoginUnique(user.Email))
             {
-                throw new LoginException("There is already user with such email in database");
+                throw new AuthenticationException("There is already user with such email in database");
             }
 
             _unitOfWork.UserRepository.Add(user);
@@ -46,7 +46,7 @@ namespace RegistrationApp.Domain.Services
 
             if (await IsLoginSuccessful(user))
             {
-                throw new LoginException("Unable to login, wrong email or password");
+                throw new AuthenticationException("Unable to login, wrong email or password");
             }
 
             return ClaimsGenerator.GenerateClaim(user);
@@ -58,7 +58,7 @@ namespace RegistrationApp.Domain.Services
 
             if (userToDelete == null)
             {
-                throw new KeyNotFoundException("Unable to delete, user not found");
+                throw new EntityNotFoundException("Unable to delete, user not found");
             }
 
             _unitOfWork.UserRepository.Delete(userToDelete);

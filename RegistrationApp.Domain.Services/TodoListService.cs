@@ -1,4 +1,5 @@
 ﻿using RegistrationApp.Domain.Core.Entities;
+using RegistrationApp.Domain.Core.Exceptions;
 using RegistrationApp.Domain.Interfaces;
 using RegistrationApp.Domain.Interfaces.Services;
 using System;
@@ -34,7 +35,7 @@ namespace RegistrationApp.Domain.Services
 
             if (itemToMarkAsDone == null)
             {
-                throw new KeyNotFoundException("Unable to mark as done, item not found");
+                throw new EntityNotFoundException("Unable to mark as done, item not found");
             }
 
             itemToMarkAsDone.IsDone = true;
@@ -64,7 +65,7 @@ namespace RegistrationApp.Domain.Services
 
             if (itemToDelete == null)
             {
-                throw new KeyNotFoundException("Unable to delete, item not found");
+                throw new EntityNotFoundException("Unable to delete, item not found");
             }
 
             _unitOfWork.TodoListRepository.Delete(itemToDelete);
