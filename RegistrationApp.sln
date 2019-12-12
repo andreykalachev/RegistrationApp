@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegistrationApp", "Registra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{2B81D6AE-8F35-4236-B253-65752EEE1AE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationApp.Domain.Core", "RegistrationApp.Domain.Core\RegistrationApp.Domain.Core.csproj", "{CAAE07FC-E049-4012-A7DC-7261293F231A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegistrationApp.Domain.Core", "RegistrationApp.Domain.Core\RegistrationApp.Domain.Core.csproj", "{CAAE07FC-E049-4012-A7DC-7261293F231A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationApp.Domain.Interfaces", "RegistrationApp.Domain.Interfaces\RegistrationApp.Domain.Interfaces.csproj", "{BBEB360C-A654-4194-B349-8C8EFEF64ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegistrationApp.Domain.Interfaces", "RegistrationApp.Domain.Interfaces\RegistrationApp.Domain.Interfaces.csproj", "{BBEB360C-A654-4194-B349-8C8EFEF64ED3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationApp.Domain.Services", "RegistrationApp.Domain.Services\RegistrationApp.Domain.Services.csproj", "{B3A20B52-4EA5-412A-A868-A3FEB9F53EEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegistrationApp.Domain.Services", "RegistrationApp.Domain.Services\RegistrationApp.Domain.Services.csproj", "{B3A20B52-4EA5-412A-A868-A3FEB9F53EEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

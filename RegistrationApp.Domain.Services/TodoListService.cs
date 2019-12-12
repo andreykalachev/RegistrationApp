@@ -17,6 +17,11 @@ namespace RegistrationApp.Domain.Services
         }
         public async Task<int> AddItemAsync(TodoItem item)
         {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item), "Unable to add item, parameter cannot be null");
+            }
+
             item.DateAdded = DateTime.Now;
             _unitOfWork.TodoListRepository.Add(item);
 
@@ -27,13 +32,15 @@ namespace RegistrationApp.Domain.Services
         {
             var itemToMarkAsDone = await _unitOfWork.TodoListRepository.GetByIdAsync(item.Id);
 
-            if (itemToMarkAsDone != null)
+            if (itemToMarkAsDone == null)
             {
-                itemToMarkAsDone.IsDone = true;
-                itemToMarkAsDone.DateDone = DateTime.Now;
-
-                await _unitOfWork.CommitAsync();
+                throw new KeyNotFoundException("Unable to mark as done, item not found");
             }
+
+            itemToMarkAsDone.IsDone = true;
+            itemToMarkAsDone.DateDone = DateTime.Now;
+
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<TodoItem> GetByIdAsync(Guid id)
@@ -55,18 +62,23 @@ namespace RegistrationApp.Domain.Services
         {
             var itemToDelete = await _unitOfWork.TodoListRepository.GetByIdAsync(id);
 
-            if (itemToDelete != null)
+            if (itemToDelete == null)
             {
-                _unitOfWork.TodoListRepository.Delete(itemToDelete);
+                throw new KeyNotFoundException("Unable to delete, item not found");
             }
 
+            _unitOfWork.TodoListRepository.Delete(itemToDelete);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task UpdateAsync(TodoItem item)
         {
-            _unitOfWork.TodoListRepository.Update(item);
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item), "Unable to update item, parameter cannot be null");
+            }
 
+            _unitOfWork.TodoListRepository.Update(item);
             await _unitOfWork.CommitAsync();
         }
     }
