@@ -5,16 +5,19 @@ using RegistrationApp.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RegistrationApp.Domain.Interfaces.Repositories;
 
 namespace RegistrationApp.Domain.Services
 {
     public class TodoListService : ITodoListService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITodoListRepository _todoListRepository;
 
         public TodoListService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _todoListRepository = _unitOfWork.TodoListRepository;
         }
         public async Task<int> AddItemAsync(TodoItem item)
         {
@@ -24,14 +27,14 @@ namespace RegistrationApp.Domain.Services
             }
 
             item.DateAdded = DateTime.Now;
-            _unitOfWork.TodoListRepository.Add(item);
+            _todoListRepository.Add(item);
 
             return await _unitOfWork.CommitAsync();
         }
 
         public async Task MarkAsDoneAsync(TodoItem item)
         {
-            var itemToMarkAsDone = await _unitOfWork.TodoListRepository.GetByIdAsync(item.Id);
+            var itemToMarkAsDone = await _todoListRepository.GetByIdAsync(item.Id);
 
             if (itemToMarkAsDone == null)
             {
@@ -46,29 +49,29 @@ namespace RegistrationApp.Domain.Services
 
         public async Task<TodoItem> GetByIdAsync(Guid id)
         {
-            return await _unitOfWork.TodoListRepository.GetByIdAsync(id);
+            return await _todoListRepository.GetByIdAsync(id);
         }
 
         public async Task<IEnumerable<TodoItem>> GetAllAsync(bool includeDoneItems = false)
         {
             if (includeDoneItems == false)
             {
-                return await _unitOfWork.TodoListRepository.GetAllAsync(x => x.IsDone == false);
+                return await _todoListRepository.GetAllAsync(x => x.IsDone == false);
             }
 
-            return await _unitOfWork.TodoListRepository.GetAllAsync();
+            return await _todoListRepository.GetAllAsync();
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            var itemToDelete = await _unitOfWork.TodoListRepository.GetByIdAsync(id);
+            var itemToDelete = await _todoListRepository.GetByIdAsync(id);
 
             if (itemToDelete == null)
             {
                 throw new EntityNotFoundException("Unable to delete, item not found");
             }
 
-            _unitOfWork.TodoListRepository.Delete(itemToDelete);
+            _todoListRepository.Delete(itemToDelete);
             await _unitOfWork.CommitAsync();
         }
 
@@ -79,7 +82,7 @@ namespace RegistrationApp.Domain.Services
                 throw new ArgumentNullException(nameof(item), "Unable to update item, parameter cannot be null");
             }
 
-            _unitOfWork.TodoListRepository.Update(item);
+            _todoListRepository.Update(item);
             await _unitOfWork.CommitAsync();
         }
     }
