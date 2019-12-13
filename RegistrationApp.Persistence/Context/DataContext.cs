@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RegistrationApp.Domain.Core.Entities;
-using RegistrationApp.Domain.Core.Identity;
+using RegistrationApp.Domain.Core.Entities.Identity;
 using RegistrationApp.Persistence.Context.Configurations;
 using RegistrationApp.Persistence.Context.Configurations.Identity;
 

@@ -1,5 +1,5 @@
-﻿using RegistrationApp.Domain.Core.Identity;
-using System;
+﻿using System;
+using RegistrationApp.Domain.Core.Entities.Identity;
 
 namespace RegistrationApp.Domain.Core.Entities
 {

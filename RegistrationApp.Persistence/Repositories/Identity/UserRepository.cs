@@ -1,10 +1,11 @@
-﻿using RegistrationApp.Domain.Core.Identity;
-using RegistrationApp.Domain.Interfaces.Repositories.Identity;
+﻿using RegistrationApp.Domain.Interfaces.Repositories.Identity;
 using RegistrationApp.Persistence.Context;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using RegistrationApp.Domain.Core.Entities.Identity;
 
 namespace RegistrationApp.Persistence.Repositories.Identity
 {
@@ -22,6 +23,11 @@ namespace RegistrationApp.Persistence.Repositories.Identity
         public override async Task<User> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate)
         {
             return await DbSet.Include(x => x.Role).FirstOrDefaultAsync(predicate);
+        }
+
+        public override async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await DbSet.Include(x => x.Role).ToListAsync();
         }
     }
 }

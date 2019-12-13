@@ -18,8 +18,10 @@ using RegistrationApp.Persistence.Context;
 using RegistrationApp.Persistence.Repositories;
 using RegistrationApp.Persistence.Repositories.Identity;
 using System.Text;
+using AutoMapper;
+using RegistrationApp.Api.Utilities.Authentication;
 
-namespace RegistrationApp
+namespace RegistrationApp.Api
 {
     public class Startup
     {
@@ -30,15 +32,21 @@ namespace RegistrationApp
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var connection = Configuration.GetConnectionString("DefaultConnection");
+            var authenticationSection = Configuration.GetSection("Authentication");
 
             services.AddSingleton(Configuration);
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(connection));
+
+            services.Configure<AuthenticationParameters>(authenticationSection);
+
+            services.AddTransient<JwtTokenGeneratorForAuthentication>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
@@ -50,8 +58,8 @@ namespace RegistrationApp
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            var secretString = "MySecretString";
-            var key = Encoding.ASCII.GetBytes(secretString);
+            var jwtSecretString = authenticationSection.Get<AuthenticationParameters>().JwtSecretString;
+            var key = Encoding.ASCII.GetBytes(jwtSecretString);
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -71,11 +79,8 @@ namespace RegistrationApp
                 });
 
             services.AddControllers();
-
-            services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -85,6 +90,7 @@ namespace RegistrationApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

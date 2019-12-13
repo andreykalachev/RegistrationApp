@@ -26,7 +26,7 @@ namespace RegistrationApp.Persistence.Repositories
             return await DbSet.Include(x => x.AddedBy).FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<IEnumerable<TodoItem>> GetAllAsync()
+        public override async Task<IEnumerable<TodoItem>> GetAllAsync()
         {
             return await DbSet.Include(x => x.AddedBy).ToListAsync();
         }

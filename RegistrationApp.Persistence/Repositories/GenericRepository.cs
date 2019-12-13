@@ -2,6 +2,7 @@
 using RegistrationApp.Domain.Interfaces.Repositories;
 using RegistrationApp.Persistence.Context;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -26,6 +27,11 @@ namespace RegistrationApp.Persistence.Repositories
         public virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await DbSet.FirstOrDefaultAsync(predicate);
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await DbSet.ToListAsync();
         }
 
         public virtual void Add(TEntity entity)

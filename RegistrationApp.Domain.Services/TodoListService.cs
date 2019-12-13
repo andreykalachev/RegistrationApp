@@ -23,7 +23,7 @@ namespace RegistrationApp.Domain.Services
         {
             if (item == null)
             {
-                throw new ArgumentNullException(nameof(item), "Unable to add item, parameter cannot be null");
+                throw new ArgumentNullException(nameof(item), "Parameter cannot be null");
             }
 
             item.DateAdded = DateTime.Now;
@@ -38,7 +38,7 @@ namespace RegistrationApp.Domain.Services
 
             if (itemToMarkAsDone == null)
             {
-                throw new EntityNotFoundException("Unable to mark as done, item not found");
+                throw new EntityNotFoundException("Item not found");
             }
 
             itemToMarkAsDone.IsDone = true;
@@ -68,7 +68,7 @@ namespace RegistrationApp.Domain.Services
 
             if (itemToDelete == null)
             {
-                throw new EntityNotFoundException("Unable to delete, item not found");
+                throw new EntityNotFoundException("Item not found");
             }
 
             _todoListRepository.Delete(itemToDelete);
@@ -79,7 +79,7 @@ namespace RegistrationApp.Domain.Services
         {
             if (item == null)
             {
-                throw new ArgumentNullException(nameof(item), "Unable to update item, parameter cannot be null");
+                throw new ArgumentNullException(nameof(item), "Parameter cannot be null");
             }
 
             _todoListRepository.Update(item);

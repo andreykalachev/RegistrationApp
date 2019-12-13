@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RegistrationApp.Domain.Core.Identity
+namespace RegistrationApp.Domain.Core.Entities.Identity
 {
     public class User
     {
@@ -13,10 +13,5 @@ namespace RegistrationApp.Domain.Core.Identity
         public string Password { get; set; }
 
         public Role Role { get; set; }
-
-        public void SetRole(Role role)
-        {
-            Role = role;
-        }
     }
 }

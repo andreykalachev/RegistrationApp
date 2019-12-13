@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using RegistrationApp.Domain.Core.Identity;
+using RegistrationApp.Domain.Core.Entities.Identity;
+using RegistrationApp.Domain.Core.ValueObjects;
 
 namespace RegistrationApp.Domain.Interfaces.Services.Identity
 {
@@ -9,9 +9,9 @@ namespace RegistrationApp.Domain.Interfaces.Services.Identity
     {
         Task<User> GetById(Guid id);
 
-        Task<ClaimsPrincipal> RegisterAsync(User user);
+        Task RegisterAsync(User user);
 
-        Task<ClaimsPrincipal> LoginAsync(User user);
+        Task<User> LoginAsync(UserLogin login);
 
         Task SetUserInRole(User user, Role role);
 

@@ -1,12 +1,11 @@
-﻿using RegistrationApp.Domain.Core.Exceptions;
-using RegistrationApp.Domain.Core.Identity;
+﻿using RegistrationApp.Domain.Core.Entities.Identity;
+using RegistrationApp.Domain.Core.Exceptions;
+using RegistrationApp.Domain.Core.ValueObjects;
 using RegistrationApp.Domain.Interfaces;
 using RegistrationApp.Domain.Interfaces.Repositories.Identity;
 using RegistrationApp.Domain.Interfaces.Services.Identity;
-using RegistrationApp.Domain.Services.Utilities;
 using System;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RegistrationApp.Domain.Services.Identity
@@ -28,43 +27,43 @@ namespace RegistrationApp.Domain.Services.Identity
 
             if (user == null)
             {
-                throw new EntityNotFoundException("Cannot find such user in database");
+                throw new EntityNotFoundException("User not found");
             }
 
             return user;
         }
 
-        public async Task<ClaimsPrincipal> RegisterAsync(User user)
+        public async Task RegisterAsync(User user)
         {
             if (user == null)
             {
-                throw new ArgumentNullException(nameof(user), "Unable to register, parameter cannot be null");
+                throw new ArgumentNullException(nameof(user), "Parameter cannot be null");
             }
 
-            if (await IsLoginUnique(user.Email))
+            if (!await IsLoginUnique(user.Email))
             {
-                throw new DomainException("There is already user with such email in database");
+                throw new DomainException("User with such email already exists");
             }
 
             _userRepository.Add(user);
             await _unitOfWork.CommitAsync();
-
-            return ClaimsGenerator.GenerateClaim(user);
         }
 
-        public async Task<ClaimsPrincipal> LoginAsync(User user)
+        public async Task<User> LoginAsync(UserLogin login)
         {
-            if (user == null)
+            if (login == null)
             {
-                throw new ArgumentNullException(nameof(user), "Unable to login, parameter cannot be null");
+                throw new ArgumentNullException(nameof(login), "Parameter cannot be null");
             }
 
-            if (await IsLoginSuccessful(user))
+            var loggedInUser = await LoginIntoUser(login);
+
+            if (loggedInUser == null)
             {
-                throw new AuthenticationException("Unable to login, wrong email or password");
+                throw new AuthenticationException("Wrong email or password");
             }
 
-            return ClaimsGenerator.GenerateClaim(user);
+            return loggedInUser;
         }
 
         public async Task SetUserInRole(User user, Role role)
@@ -75,7 +74,7 @@ namespace RegistrationApp.Domain.Services.Identity
             }
 
             var userToUpdate = await GetById(user.Id);
-            userToUpdate.SetRole(role);
+            userToUpdate.Role = role;
             _userRepository.Update(userToUpdate);
 
             await _unitOfWork.CommitAsync();
@@ -99,10 +98,12 @@ namespace RegistrationApp.Domain.Services.Identity
             return await _userRepository.FirstOrDefaultAsync(x => x.Email == email) == null;
         }
 
-        private async Task<bool> IsLoginSuccessful(User user)
+        private async Task<User> LoginIntoUser(UserLogin login)
         {
-            return await _userRepository.FirstOrDefaultAsync(x =>
-                x.Email == user.Email && x.Password == user.Password) == null;
+            var user = await _userRepository.FirstOrDefaultAsync(x =>
+                x.Email == login.Email && x.Password == login.Password);
+
+            return user;
         }
     }
 }

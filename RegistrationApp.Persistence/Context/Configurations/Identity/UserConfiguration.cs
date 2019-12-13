@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RegistrationApp.Domain.Core.Identity;
+using RegistrationApp.Domain.Core.Entities.Identity;
 
 namespace RegistrationApp.Persistence.Context.Configurations.Identity
 {
