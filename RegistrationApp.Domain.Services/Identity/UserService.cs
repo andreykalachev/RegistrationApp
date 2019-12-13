@@ -33,6 +33,23 @@ namespace RegistrationApp.Domain.Services.Identity
             return user;
         }
 
+        public async Task<User> GetByEmail(string email)
+        {
+            if (email == null)
+            {
+                throw new ArgumentNullException(nameof(email), "Parameter cannot be null");
+            }
+
+            var user = await _userRepository.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User not found");
+            }
+
+            return user;
+        }
+
         public async Task RegisterAsync(User user)
         {
             if (user == null)

@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using RegistrationApp.Api.Models;
 using RegistrationApp.Api.Utilities.Authentication;
+using RegistrationApp.Domain.Core.Entities.Identity;
 using RegistrationApp.Domain.Core.ValueObjects;
 using RegistrationApp.Domain.Interfaces.Services.Identity;
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
-using RegistrationApp.Api.Models;
-using RegistrationApp.Domain.Core.Entities.Identity;
 
 namespace RegistrationApp.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {

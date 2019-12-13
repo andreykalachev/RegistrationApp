@@ -9,6 +9,8 @@ namespace RegistrationApp.Domain.Interfaces.Services.Identity
     {
         Task<User> GetById(Guid id);
 
+        Task<User> GetByEmail(string email);
+
         Task RegisterAsync(User user);
 
         Task<User> LoginAsync(UserLogin login);

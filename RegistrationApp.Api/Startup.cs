@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using RegistrationApp.Api.Extensions;
+using RegistrationApp.Api.Utilities.Authentication;
 using RegistrationApp.Domain.Interfaces;
 using RegistrationApp.Domain.Interfaces.Repositories;
 using RegistrationApp.Domain.Interfaces.Repositories.Identity;
@@ -18,8 +21,6 @@ using RegistrationApp.Persistence.Context;
 using RegistrationApp.Persistence.Repositories;
 using RegistrationApp.Persistence.Repositories.Identity;
 using System.Text;
-using AutoMapper;
-using RegistrationApp.Api.Utilities.Authentication;
 
 namespace RegistrationApp.Api
 {
@@ -88,8 +89,8 @@ namespace RegistrationApp.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseExceptionsMiddleware();
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
