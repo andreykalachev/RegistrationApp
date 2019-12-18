@@ -7,6 +7,7 @@ using RegistrationApp.Domain.Core.ValueObjects;
 using RegistrationApp.Domain.Interfaces.Services.Identity;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RegistrationApp.Api.Controllers
 {
@@ -51,9 +52,9 @@ namespace RegistrationApp.Api.Controllers
         }
 
         [HttpPost("/register")]
-        public async Task<IActionResult> Register(UserRegistrationData registrationData)
+        public async Task<IActionResult> Register(UserRegistrationViewModel registrationData)
         {
-            var user = _mapper.Map<UserRegistrationData, User>(registrationData);
+            var user = _mapper.Map<UserRegistrationViewModel, User>(registrationData);
             await _userService.RegisterAsync(user);
             var jwtAuthenticationToken = _jwtTokenGeneratorForAuthentication.GenerateTokenForUser(user);
 
@@ -67,6 +68,17 @@ namespace RegistrationApp.Api.Controllers
             var jwtAuthenticationToken = _jwtTokenGeneratorForAuthentication.GenerateTokenForUser(loggedInUser);
 
             return Ok(jwtAuthenticationToken);
+        }
+
+        [Authorize]
+        [HttpGet("/getUserName")]
+        public async Task<IActionResult> GetUserName()
+        {
+            var userEmail = HttpContext.User.Identity.Name;
+
+            var userName = await _userService.GetByEmail(userEmail);
+
+            return Ok(userName.Name);
         }
     }
 }

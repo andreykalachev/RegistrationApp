@@ -1,11 +1,11 @@
 ﻿using RegistrationApp.Domain.Core.Entities;
 using RegistrationApp.Domain.Core.Exceptions;
 using RegistrationApp.Domain.Interfaces;
+using RegistrationApp.Domain.Interfaces.Repositories;
 using RegistrationApp.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RegistrationApp.Domain.Interfaces.Repositories;
 
 namespace RegistrationApp.Domain.Services
 {
@@ -27,22 +27,31 @@ namespace RegistrationApp.Domain.Services
             }
 
             item.DateAdded = DateTime.Now;
+            item.IsDone = false;
             _todoListRepository.Add(item);
 
             return await _unitOfWork.CommitAsync();
         }
 
-        public async Task MarkAsDoneAsync(TodoItem item)
+        public async Task MarkAsDoneAsync(Guid itemId, bool isDone = true)
         {
-            var itemToMarkAsDone = await _todoListRepository.GetByIdAsync(item.Id);
+            var itemToMarkAsDone = await _todoListRepository.GetByIdAsync(itemId);
 
             if (itemToMarkAsDone == null)
             {
                 throw new EntityNotFoundException("Item not found");
             }
 
-            itemToMarkAsDone.IsDone = true;
-            itemToMarkAsDone.DateDone = DateTime.Now;
+            itemToMarkAsDone.IsDone = isDone;
+
+            if (isDone == true)
+            {
+                itemToMarkAsDone.DateDone = DateTime.Now;
+            }
+            else
+            {
+                itemToMarkAsDone.DateDone = null;
+            }
 
             await _unitOfWork.CommitAsync();
         }
@@ -60,6 +69,16 @@ namespace RegistrationApp.Domain.Services
             }
 
             return await _todoListRepository.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<TodoItem>> GetAllByUserEmailAsync(string userEmail)
+        {
+            if (userEmail == null)
+            {
+                throw new ArgumentNullException(nameof(userEmail), "Parameter cannot be null");
+            }
+
+            return await _todoListRepository.GetAllAsync(x => x.AddedBy.Email == userEmail);
         }
 
         public async Task DeleteAsync(Guid id)

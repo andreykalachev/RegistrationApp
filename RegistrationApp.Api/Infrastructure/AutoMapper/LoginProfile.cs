@@ -8,7 +8,7 @@ namespace RegistrationApp.Api.Infrastructure.AutoMapper
     {
         public LoginProfile()
         {
-            CreateMap<UserRegistrationData, User>();
+            CreateMap<UserRegistrationViewModel, User>();
         }
     }
 }

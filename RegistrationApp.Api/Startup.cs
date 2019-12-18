@@ -80,6 +80,13 @@ namespace RegistrationApp.Api
                 });
 
             services.AddControllers();
+
+            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -89,6 +96,7 @@ namespace RegistrationApp.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowAll");
             app.UseExceptionsMiddleware();
             app.UseRouting();
             app.UseAuthentication();

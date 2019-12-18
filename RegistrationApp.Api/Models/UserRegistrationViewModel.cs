@@ -2,7 +2,7 @@
 
 namespace RegistrationApp.Api.Models
 {
-    public class UserRegistrationData
+    public class UserRegistrationViewModel
     {
         public string Name { get; set; }
 
