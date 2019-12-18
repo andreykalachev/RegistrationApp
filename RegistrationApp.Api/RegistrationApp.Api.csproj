@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RegistrationApp.Domain.Core\RegistrationApp.Domain.Core.csproj" />
+    <ProjectReference Include="..\RegistrationApp.Domain.Interfaces\RegistrationApp.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\RegistrationApp.Domain.Services\RegistrationApp.Domain.Services.csproj" />
+    <ProjectReference Include="..\RegistrationApp.Persistence\RegistrationApp.Persistence.csproj" />
+  </ItemGroup>
+
+
+</Project>

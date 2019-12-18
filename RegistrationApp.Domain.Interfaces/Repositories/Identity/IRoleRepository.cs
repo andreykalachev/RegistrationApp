@@ -1,4 +1,4 @@
-﻿using RegistrationApp.Domain.Core.Identity;
+﻿using RegistrationApp.Domain.Core.Entities.Identity;
 
 namespace RegistrationApp.Domain.Interfaces.Repositories.Identity
 {

@@ -9,11 +9,13 @@ namespace RegistrationApp.Domain.Interfaces.Services
     {
         Task<int> AddItemAsync(TodoItem item);
 
-        Task MarkAsDoneAsync(TodoItem item);
+        Task MarkAsDoneAsync(Guid itemId, bool isDone = true);
 
         Task<TodoItem> GetByIdAsync(Guid id);
 
         Task<IEnumerable<TodoItem>> GetAllAsync(bool includeDoneItems = false);
+
+        Task<IEnumerable<TodoItem>> GetAllByUserEmailAsync(string userEmail);
 
         Task DeleteAsync(Guid id);
 

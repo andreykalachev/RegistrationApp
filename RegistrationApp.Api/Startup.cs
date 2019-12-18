@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using RegistrationApp.Api.Extensions;
+using RegistrationApp.Api.Utilities.Authentication;
 using RegistrationApp.Domain.Interfaces;
 using RegistrationApp.Domain.Interfaces.Repositories;
 using RegistrationApp.Domain.Interfaces.Repositories.Identity;
@@ -19,7 +22,7 @@ using RegistrationApp.Persistence.Repositories;
 using RegistrationApp.Persistence.Repositories.Identity;
 using System.Text;
 
-namespace RegistrationApp
+namespace RegistrationApp.Api
 {
     public class Startup
     {
@@ -30,15 +33,21 @@ namespace RegistrationApp
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var connection = Configuration.GetConnectionString("DefaultConnection");
+            var authenticationSection = Configuration.GetSection("Authentication");
 
             services.AddSingleton(Configuration);
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(connection));
+
+            services.Configure<AuthenticationParameters>(authenticationSection);
+
+            services.AddTransient<JwtTokenGeneratorForAuthentication>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
@@ -50,8 +59,8 @@ namespace RegistrationApp
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            var secretString = "MySecretString";
-            var key = Encoding.ASCII.GetBytes(secretString);
+            var jwtSecretString = authenticationSection.Get<AuthenticationParameters>().JwtSecretString;
+            var key = Encoding.ASCII.GetBytes(jwtSecretString);
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -72,10 +81,14 @@ namespace RegistrationApp
 
             services.AddControllers();
 
-            services.AddMvc();
+            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -83,8 +96,10 @@ namespace RegistrationApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowAll");
+            app.UseExceptionsMiddleware();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

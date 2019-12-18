@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RegistrationApp.Domain.Core.Identity
+namespace RegistrationApp.Domain.Core.Entities.Identity
 {
     public class Role
     {
