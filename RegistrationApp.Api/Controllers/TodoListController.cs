@@ -12,7 +12,7 @@ namespace RegistrationApp.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    [Route("{controller}")]
     public class TodoListController : ControllerBase
     {
         private readonly ITodoListService _todoListService;
@@ -26,8 +26,7 @@ namespace RegistrationApp.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("/{controller}/{id}")]
-        [Authorize(Roles = "User")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var item = await _todoListService.GetByIdAsync(id);
@@ -40,7 +39,7 @@ namespace RegistrationApp.Api.Controllers
             return Ok(item);
         }
 
-        [HttpGet("/allMyTasks")]
+        [HttpGet("allMyTasks")]
         public async Task<IActionResult> GetAll()
         {
             var userEmail = HttpContext.User.Identity.Name;
@@ -60,7 +59,7 @@ namespace RegistrationApp.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("/{controller}/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var item = await _todoListService.GetByIdAsync(id);
@@ -75,7 +74,7 @@ namespace RegistrationApp.Api.Controllers
             return Ok();
         }
 
-        [HttpPut("/{controller}/markAsDone/{id}")]
+        [HttpPut("markAsDone/{id}")]
         public async Task<IActionResult> MarkAsDone(Guid id, [FromBody]bool isDone = true)
         {
             var item = await _todoListService.GetByIdAsync(id);
@@ -90,7 +89,7 @@ namespace RegistrationApp.Api.Controllers
             return Ok(item);
         }
 
-        [HttpPut("/{controller}")]
+        [HttpPut]
         public async Task<IActionResult> Put(TodoItemUpdateViewModel updatedItem)
         {
             if (updatedItem == null)
